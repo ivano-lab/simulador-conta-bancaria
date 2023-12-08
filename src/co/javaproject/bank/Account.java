@@ -10,13 +10,13 @@ public class Account {
 
     private double balance;
 
-    private log logger;
+    private Log logger;
 
     public Account(String ag, String cc, String name) {
         this.ag = ag;
         this.cc = cc;
         setName(name);
-        logger = new log();
+        logger = new Log();
     }
 
     public void setName(String name) {
@@ -38,8 +38,12 @@ public class Account {
             return false;
         }
         balance -= value;
-        logger.out("SAQUE - R$ " + value + " Sua conta agora e de R$ " + balance);
+        logger.out("SAQUE - R$ " + value + " Seu saldo agora é de R$ " + balance);
         return true;
+    }
+
+    public double getBalance() {
+        return balance;
     }
 
     @Override

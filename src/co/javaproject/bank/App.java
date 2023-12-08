@@ -1,33 +1,67 @@
 package co.javaproject.bank;
 
+import java.util.Scanner;
+import java.util.List;
+
 public class App {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Bank santander = new Bank("0001");
+        // 1 = Criar conta
+        // 2 = Sair
 
-        // criar uma conta (agencia, conta, nome)
-        // limitar o nome = 12 caracteres
-        Account account = new Account("0001", "1234", "usuário 1");
+        while(true) {
+            System.out.println("O que deseja fazer?\n1) Criar conta\n2) Sair");
+            String op = scanner.nextLine();
 
-        // sacar valores
-        // não pode sacar mais do que tem
-        boolean succed = account.withDraw(200.0);
-        if (!succed) {
-            System.out.println("Você não tem saldo suficiente para sacar!");
+            if (op.equals("1")) {
+                System.out.print("Digite o nome do titular da conta: ");
+                String name = scanner.nextLine();
+                Account account = santander.generateAccount(name);
+                santander.insertAccount(account);
+
+                operateAccount(account);
+            } else if (op.equals("2")) {
+                System.out.println("Encerrando...");
+                break;
+            } else {
+                System.out.println("Operação inválida! Tente novamente!");
+            }
         }
 
-        // depositar
-        account.deposit(100);
-        account.deposit(50);
-        account.deposit(100);
-
-        if(!account.withDraw(200)) {
-            System.out.println("Você não tem saldo suficiente para sacar!");
+        List<Account> accountList = santander.getAccounts();
+        for(Account cc: accountList) {
+            System.out.println(cc);
         }
+        santander.outputTotal();
+    }
 
-        if(!account.withDraw(200)) {
-            System.out.println("Você não tem saldo suficiente para sacar!");
+    static void operateAccount(Account account) {
+        Scanner scanner = new Scanner(System.in);
+        // 1 = Depositar
+        // 2 = Saque
+        // 3 = Sair (exit)
+        while (true) {
+            System.out.println("O que deseja fazer?\n=====================\n1) Depósito\n2) Saque\n3) Sair da Conta");
+            String op = scanner.nextLine();
+
+            if (op.equals("1")) {
+                System.out.print("Qual valor deseja depositar?\nR$");
+                double value = scanner.nextDouble();
+                account.deposit(value);
+            } else if (op.equals("2")){
+                System.out.print("Qual valor deseja sacar?\nR$");
+                double value = scanner.nextDouble();
+                if (!account.withDraw(value)) {
+                    System.out.println("Nâo foi possível sacar o valor R$" + value);
+                }
+            } else if (op.equals("3")) {
+                System.out.println("Encerrando...");
+                break;
+            } else {
+                System.out.println("Operação inválida! Tente novamente!");
+            }
+            scanner = new Scanner(System.in);
         }
-
-        // informar para o usuario as operações (saque, depósito)
-        System.out.println(account);
     }
 }
